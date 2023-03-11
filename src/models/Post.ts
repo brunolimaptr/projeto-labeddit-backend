@@ -5,8 +5,9 @@ export class Post {
         private content: string,
         private likes: number,
         private dislikes: number,
+        private comments: number,
         private createdAt: string,
-        private updateAt: string
+        private updateAt: string,
     ){}
 
     getId(): string{
@@ -79,6 +80,14 @@ export class Post {
 
     setUpdateAt(value: string):void {
         this.updateAt = value
+    }
+
+    public getComments(): number {
+        return this.comments
+    }
+
+    public setComments(value: number): void {
+        this.comments = value
     }
 }
 

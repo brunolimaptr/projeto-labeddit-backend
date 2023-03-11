@@ -44,6 +44,8 @@ export class UserBusiness {
                     }
                 }
             
+            const hashPassword = await this.hashManager.hash(password)
+            
     
     
             const emailExists = await this.userDataBase.findPostUserEmail(email)
@@ -60,7 +62,7 @@ export class UserBusiness {
                 this.idGenerator.generate(),
                 nick_name,
                 email,
-                password,
+                hashPassword,
                 USER_ROLES.USUARIO,
                 new Date().toISOString()
             )
@@ -123,33 +125,30 @@ export class UserBusiness {
                     throw new BadRequestError("Parâmetro 'email' inválido")
                 }
     
-               const passwordExists = await this.userDataBase.findPostUserPassword(password)
-    
-                if (!passwordExists) {
-                throw new BadRequestError("Senha incorreta");
-                }
+
             
     
 
             const userInstance = new User(
-                passwordExists.id,
-                passwordExists.nick_name,
-                passwordExists.email,
-                passwordExists.password,
-                passwordExists.role,
-                passwordExists.created_at
+                emailExists.id,
+                emailExists.nick_name,
+                emailExists.email,
+                emailExists.password,
+                emailExists.role,
+                emailExists.created_at
             )
     
             const hashedPassaword = userInstance.getPassword()
 
             
-            await this.hashManager
+            const passwordHash = await this.hashManager
             .compare(password, hashedPassaword)
             
 
-            if(password !== hashedPassaword){
+            if(!passwordHash){
                 throw new BadRequestError("Password incorreto")
             }
+            
             
             const newUser: TokenPayload = {
                 id: userInstance.getId(),

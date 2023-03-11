@@ -43,7 +43,6 @@ export class CommentBusiness{
             }
 
         const postId = await this.postDataBase.findPostId(idPost)
-        console.log(postId);
         
 
         if(postId === null){

@@ -1,6 +1,6 @@
 import { GetPostDB } from "../models/types"
 
-export interface SignupInputDTO{
+export interface SignupInputDTO {
     nick_name: unknown,
     email: unknown,
     password: unknown
@@ -11,7 +11,7 @@ export interface SignupOutputDTO {
     token: string
 }
 
-export interface LoginInputDTO {  
+export interface LoginInputDTO {
     email: unknown,
     password: unknown
 }
@@ -79,3 +79,9 @@ export interface LikeOrDislikeCommentDTO {
 }
 
 
+export interface GetPostCommentInputDTO {
+    token: string | undefined
+    idPost: string
+}
+
+      
