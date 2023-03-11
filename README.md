@@ -1,7 +1,7 @@
-# Projeto Labook
+# Projeto Labeddit
 
-O Labook é uma rede social com o objetivo de promover a conexão e interação entre pessoas. 
-Quem se cadastrar no aplicativo poderá criar e curtir publicações.
+O Labeddit é uma rede social com o objetivo de promover a conexão e interação entre pessoas. 
+Quem se cadastrar no aplicativo poderá criar, comentar e curtir publicações.
 
 Aplicação back-end de servidor express com banco de dados sqlite3.
 
@@ -9,4 +9,4 @@ Aplicação back-end de servidor express com banco de dados sqlite3.
 Rodar o script de dev ou buildar e rodar o de start.
 
 ## Documentação
-https://documenter.getpostman.com/view/24471155/2s93CPqCQt
+https://documenter.getpostman.com/view/24471155/2s93JtQP1u
