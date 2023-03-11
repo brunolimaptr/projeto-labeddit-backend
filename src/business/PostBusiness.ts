@@ -1,6 +1,7 @@
+import { CommentDataBase } from "../database/CommentDataBase";
 import { PostDataBase } from "../database/PostDataBase";
 import { UserDataBase } from "../database/UserDataBase";
-import { CreatePostDTO, DeletePostInputDTO, EditPostInputDTO, GetPostInputDTO, GetPostOutputDTO, LikeOrDislikeDTO } from "../dto/userDTO";
+import { CreatePostDTO, DeletePostInputDTO, EditPostInputDTO, GetPostInputDTO, LikeOrDislikeDTO } from "../dto/userDTO";
 import { BadRequestError } from "../errors/BadRequestError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { Post } from "../models/Post";
@@ -47,8 +48,9 @@ export class PostBusiness{
             postagem,
             0,
             0,
+            0,
             new Date().toISOString(),
-            new Date().toISOString()
+            new Date().toISOString(),
         )
 
         
@@ -58,6 +60,7 @@ export class PostBusiness{
             content: postIntance.getContent(),
             likes: postIntance.getLikes(),
             dislikes: postIntance.getDislikes(),
+            comments: postIntance.getComments(),
             created_at: postIntance.getCreatedAt(),
             updated_at: postIntance.getUpdateAt()
         }
@@ -67,7 +70,7 @@ export class PostBusiness{
        
     }
 
-    public getPost = async (input: GetPostInputDTO) =>{
+    public getPost = async (input: GetPostInputDTO)=>{
 
         const { token } = input
 
@@ -95,6 +98,7 @@ export class PostBusiness{
                 content: item.content,
                 likes: item.likes,
                 dislikes: item.dislikes,
+                Comments: item.comments,
                 created_at: item.created_at,
                 updated_at: item.updated_at,
                 creator: 
@@ -167,8 +171,9 @@ export class PostBusiness{
                post.content,
                post.likes,
                post.dislikes,
+               post.comments,
                post.created_at,
-               post.updated_at
+               post.updated_at   
             )
 
 
@@ -179,6 +184,7 @@ export class PostBusiness{
                 likes:  postInstance.getLikes(),
                 content: content || postInstance.getContent(),
                 dislikes: postInstance.getDislikes(),
+                comments: postInstance.getComments(),
                 created_at: postInstance.getCreatedAt(),
                 updated_at: postInstance.getUpdateAt()
             }
@@ -218,6 +224,7 @@ export class PostBusiness{
             post.content,
             post.likes,
             post.dislikes,
+            post.comments,
             post.created_at,
             post.updated_at
         )
@@ -271,6 +278,7 @@ export class PostBusiness{
             post.content,
             post.likes,
             post.dislikes,
+            post.comments,
             post.created_at,
             post.updated_at
         ) 
@@ -309,10 +317,77 @@ export class PostBusiness{
             likes:  postLikeDis.getLikes(),
             content: postLikeDis.getContent(),
             dislikes: postLikeDis.getDislikes(),
+            comments: postLikeDis.getComments(),
             created_at: postLikeDis.getCreatedAt(),
             updated_at: postLikeDis.getUpdateAt()
         }
        
         await this.postDataBase.findUpdatePost(updatePosts, idLikeOrDislike)
     }
+
+
+    public getPostCommentId = async (input: GetPostInputDTO) =>{
+
+        const { token } = input
+
+        if(token === undefined){
+            throw new BadRequestError("token ausente")
+        }
+
+        const payload = this.tokenManager.getPayload(token)
+
+        if(payload === null){
+            throw new BadRequestError("token inválido")
+        }
+
+    
+        const resultPosts = await this.postDataBase.findGetPost()
+
+        const userDataBase = new UserDataBase()
+
+        const resultUsers = await userDataBase.findGetUsers()
+
+        const commentDataBase = new CommentDataBase()
+
+        const resultComment = await commentDataBase.findGetComment()
+
+           
+
+        const resultPost = resultPosts.map((item)=>{
+            
+            const contador =  resultComment.filter((itemComment)=>{
+                  const contandorComment = itemComment.post_id === item.id
+                     return contandorComment  
+                })
+           
+            return {
+                id: item.id,
+                content: item.content,
+                likes: item.likes,
+                dislikes: item.dislikes,
+                comments: contador.length,
+                updated_at: item.updated_at,
+                creator: resultado(item.creator_id), 
+                comentsPost: contador
+
+            }
+        })
+
+
+
+        function resultado (item: string){
+           const resultTable = resultUsers.find((result)=>{
+            
+            return item === result.id
+
+           })
+           
+           return {id: resultTable?.id, 
+        name: resultTable?.nick_name}
+        }
+       
+        return ({Post: resultPost})
     }
+    }
+
+

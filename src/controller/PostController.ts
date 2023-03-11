@@ -139,4 +139,48 @@ export class PostController {
             }
         }
     }
+
+    public getPostComment = async (req: Request, res: Response) => {
+        try {
+            const input : GetPostInputDTO = {
+                token: req.headers.authorization
+            }
+    
+            const output   = await this.postBusiness.getPostCommentId(input)
+    
+            res.status(200).send(output)
+        }
+        catch (error: any) {
+            console.log(error)
+    
+            if (error instanceof BaseError) {
+                res.status(error.statusCode)
+                .send(error.message)
+            }else{
+                res.send("Erro inesperado")
+            }
+        }
+    }
+
 }
+
+
+// public getPostsWithComment = async (req: Request, res: Response) => {
+//     try {
+//         const input: GetPostsInputDTO = {
+//             token: req.headers.authorization
+//         }
+
+//         const output = await this.postBusiness.getPost(input)
+
+//         res.status(200).send(output)
+//     } catch (error) {
+//         console.log(error)
+
+//         if (error instanceof BaseError) {
+//             res.status(error.statusCode).send(error.message)
+//         } else {
+// res.send("Erro inesperado")
+//         }
+//     }
+// }
