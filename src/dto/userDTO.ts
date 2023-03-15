@@ -80,8 +80,8 @@ export interface LikeOrDislikeCommentDTO {
 
 
 export interface GetPostCommentInputDTO {
+    idParams: string
     token: string | undefined
-    idPost: string
 }
 
       

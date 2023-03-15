@@ -1,7 +1,7 @@
 import { CommentDataBase } from "../database/CommentDataBase";
 import { PostDataBase } from "../database/PostDataBase";
 import { UserDataBase } from "../database/UserDataBase";
-import { CreatePostDTO, DeletePostInputDTO, EditPostInputDTO, GetPostInputDTO, LikeOrDislikeDTO } from "../dto/userDTO";
+import { CreatePostDTO, DeletePostInputDTO, EditPostInputDTO, GetPostCommentInputDTO, GetPostInputDTO, LikeOrDislikeDTO } from "../dto/userDTO";
 import { BadRequestError } from "../errors/BadRequestError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { Post } from "../models/Post";
@@ -326,9 +326,9 @@ export class PostBusiness{
     }
 
 
-    public getPostCommentId = async (input: GetPostInputDTO) =>{
+    public getPostCommentId = async (input: GetPostCommentInputDTO) =>{
 
-        const { token } = input
+        const { token, idParams } = input
 
         if(token === undefined){
             throw new BadRequestError("token ausente")
@@ -339,6 +339,17 @@ export class PostBusiness{
         if(payload === null){
             throw new BadRequestError("token inválido")
         }
+
+        const post = await this.postDataBase.findPostId(idParams)
+       
+
+        if (!post) {
+        throw new BadRequestError("'id' não encontrada")
+        }
+        
+        // if(post.creator_id !== payload.id){
+        // throw new BadRequestError("somente quem criou o post, pode editar")
+        // }
 
     
         const resultPosts = await this.postDataBase.findGetPost()
@@ -351,15 +362,19 @@ export class PostBusiness{
 
         const resultComment = await commentDataBase.findGetComment()
 
+           console.log(resultPosts);
            
 
-        const resultPost = resultPosts.map((item)=>{
+        const resultPost = resultPosts.filter((item)=>{
+            const postIgual = post.id === item.id
+            return postIgual
+        })
             
-            const contador =  resultComment.filter((itemComment)=>{
-                  const contandorComment = itemComment.post_id === item.id
-                     return contandorComment  
-                })
-           
+            const resultadoPost = resultPost.map((item)=>{
+                const contador =  resultComment.filter((itemComment)=>{
+                    const contandorComment = itemComment.post_id === item.id
+                       return contandorComment  
+                  })
             return {
                 id: item.id,
                 content: item.content,
@@ -386,7 +401,7 @@ export class PostBusiness{
         name: resultTable?.nick_name}
         }
        
-        return ({Post: resultPost})
+        return ({Post: resultadoPost})
     }
     }
 
