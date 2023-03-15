@@ -28,4 +28,4 @@ postRouter.delete("/:id", postController.deletePost)
 
 postRouter.put("/:id/like", postController.updatePostId)
 
-postRouter.get("/commentId", postController.getPostComment)
+postRouter.get("/comment/:id", postController.getPostComment)
