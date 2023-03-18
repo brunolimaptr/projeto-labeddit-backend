@@ -18,4 +18,4 @@ https://labeddit-frontend-nine.vercel.app/
 
 
 ## Documentação
-https://documenter.getpostman.com/view/24471155/2s93JtQP1u
+https://documenter.getpostman.com/view/24471155/2s93JtQP1u 
