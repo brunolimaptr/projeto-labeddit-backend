@@ -8,5 +8,14 @@ Aplicação back-end de servidor express com banco de dados sqlite3.
 ## Passo-a-passo
 Rodar o script de dev ou buildar e rodar o de start.
 
+## Deploy back-end
+
+https://labeddit-0qmm.onrender.com
+
+## Deploy front-end
+
+https://labeddit-frontend-nine.vercel.app/
+
+
 ## Documentação
 https://documenter.getpostman.com/view/24471155/2s93JtQP1u
